@@ -162,11 +162,44 @@ namespace CourseWorkCsharp
 
         void deleteRow()
         {
-            int index = TrainDataView.SelectedRows[0].Index;
-
-            if (TrainDataView.Rows.Count > 0)
+            int rowIndex = TrainDataView.CurrentCell.RowIndex;
+            int columnIndex = TrainDataView.CurrentCell.ColumnIndex;
+            if (TrainDataView.CurrentCell.Selected)
             {
-                TrainDataView.Rows.Remove(TrainDataView.SelectedRows[0]);
+                TrainDataView.CurrentCell.Value = "";
+                switch (columnIndex)
+                {
+                    case 0:
+                        trains[rowIndex].setDestinationStation("");
+                        break;
+
+                    case 1:
+                        trains[rowIndex].setNumberTrain("");
+                        break;
+
+                    case 2:
+                        trains[rowIndex].setDepartureTime(DateTime.MinValue);
+                        break;
+
+                    case 3:
+                        trains[rowIndex].setArrivalTime(DateTime.MinValue);
+                        break;
+
+                    case 4:
+                        trains[rowIndex].setTravelPrice(0.0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        void deleteCurrentCell()
+        {
+            if (TrainDataView.Rows.Count > 0 && TrainDataView.CurrentRow.Selected)
+            {
+                int index = TrainDataView.CurrentRow.Index;
+                TrainDataView.Rows.Remove(TrainDataView.CurrentRow);
                 trains.RemoveAt(index);
             }
         }
@@ -348,7 +381,6 @@ namespace CourseWorkCsharp
             switch (columnIndex)
             {
                 case 0:
-                    TrainDataView.NotifyCurrentCellDirty(true);
                     trains[rowIndex].setDestinationStation(TrainDataView.CurrentCell.Value.ToString());
                     break;
 
@@ -408,12 +440,9 @@ namespace CourseWorkCsharp
         public Form1()
         {
             InitializeComponent();
-            //TrainDataView.DataSource = trains;
             initListBox();
             initArrayTrains();
             fillTableOfData();
-
-
         }
 
         private void ButtonAddRow_Click(object sender, EventArgs e)
@@ -424,11 +453,10 @@ namespace CourseWorkCsharp
             }
         }
 
-
-
         private void ButtonDeleteRow_Click(object sender, EventArgs e)
         {
             deleteRow();
+            deleteCurrentCell();
         }
 
         private void ButtonLoadData_Click(object sender, EventArgs e)
@@ -460,6 +488,7 @@ namespace CourseWorkCsharp
         {
             CreatePasswordWindow();
         }
+
         void MyButtonHandler(object sender, EventArgs e)
         {
  

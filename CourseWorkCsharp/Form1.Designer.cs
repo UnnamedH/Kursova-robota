@@ -139,8 +139,10 @@
             this.ArrivalTime,
             this.TravelPrice});
             this.TrainDataView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.TrainDataView.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.TrainDataView.Location = new System.Drawing.Point(33, 111);
             this.TrainDataView.Name = "TrainDataView";
+            this.TrainDataView.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.TrainDataView.RowHeadersWidth = 51;
             this.TrainDataView.RowTemplate.Height = 24;
             this.TrainDataView.Size = new System.Drawing.Size(878, 306);
@@ -333,7 +335,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button ButtonAddRow;
         private System.Windows.Forms.Button ButtonDeleteRow;
-        private System.Windows.Forms.DataGridView TrainDataView;
         private System.Windows.Forms.TextBox FieldNumberTrain;
         private System.Windows.Forms.MaskedTextBox FieldDepartureTime;
         private System.Windows.Forms.MaskedTextBox FieldArrivalTime;
@@ -351,6 +352,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DepartureTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArrivalTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn TravelPrice;
+        protected System.Windows.Forms.DataGridView TrainDataView;
     }
 }
 

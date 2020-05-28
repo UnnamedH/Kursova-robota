@@ -13,10 +13,7 @@ namespace CourseWorkCsharp
         /// Главная точка входа для приложения.
         /// </summary>
         /// #include <iostream>
-
-
-
-        
+ 
     [STAThread]
         static void Main()
         { 

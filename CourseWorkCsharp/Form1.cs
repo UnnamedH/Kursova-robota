@@ -6,80 +6,6 @@ using System.Windows.Forms;
 namespace CourseWorkCsharp
 {
  
-    public struct ScheduleTrain
-    {
-        private string DestinationStation;
-        private string NumberTrain;
-        private DateTime DepartureTime;
-        private DateTime ArrivalTime;
-        private double TravelPrice;
-        public ScheduleTrain(string DestinationStation, string NumberTrain, DateTime DepartureTime,
-        DateTime ArrivalTime, double TravelPrice)
-        {
-            this.DestinationStation = DestinationStation;
-            this.NumberTrain = NumberTrain;
-            this.DepartureTime = DepartureTime;
-            this.ArrivalTime = ArrivalTime;
-            this.TravelPrice = TravelPrice;
-        }
-
-        public void setDestinationStation(String DestinationStation)
-        {
-            if (DestinationStation.Length <= 15)
-            {
-                this.DestinationStation = DestinationStation;
-            }
-        }
-
-        public string getDestinationStation()
-        {
-            return DestinationStation;
-        }
-
-        public void setNumberTrain(String NumberTrain)
-        {
-            if (NumberTrain.Length <= 5)
-            {
-                this.NumberTrain = NumberTrain;
-            }
-        }
-
-        public string getNumberTrain()
-        {         
-                return NumberTrain;         
-        }
-
-        public void setDepartureTime(DateTime DepartureTime)
-        {
-                this.DepartureTime = DepartureTime;
-        }
-
-        public DateTime getDepartureTime()
-        {
-            return DepartureTime;
-        }
-
-        public void setArrivalTime(DateTime ArrivalTime)
-        {
-            this.ArrivalTime = ArrivalTime;
-        }
-
-        public DateTime getArrivalTime()
-        {
-            return ArrivalTime;
-        }
-
-        public void setTravelPrice(double TravelPrice)
-        {
-            this.TravelPrice = TravelPrice;
-        }
-
-        public double getTravelPrice()
-        {
-            return TravelPrice;
-        }
-
-    };
     public partial class Form1 : Form
     {
         public List<ScheduleTrain> trains = new List<ScheduleTrain>();
@@ -247,39 +173,26 @@ namespace CourseWorkCsharp
 
         void readDataFromFile()
         {
-            string DestinationStation, NumberTrain;
-            DateTime DepartureTime, ArrivalTime;
-            double TravelPrice;
             var result = MessageBox.Show("Load data from file?", "", MessageBoxButtons.YesNo);
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.ShowDialog();
                 if (!openFileDialog.ShowDialog().Equals(DialogResult.OK))
                 {
                     return;
                 }
-                string filename = openFileDialog.FileName;
-                using (System.IO.BinaryReader binaryReader = new System.IO.BinaryReader(
-                new System.IO.FileStream(filename, System.IO.FileMode.Open)))
-                {
-                    int i = 0;
-                    while (binaryReader.PeekChar() > -1)
-                    {
-                        DestinationStation = binaryReader.ReadString();
-                        NumberTrain = binaryReader.ReadString();
-                        DepartureTime = Convert.ToDateTime(binaryReader.ReadString());
-                        ArrivalTime = Convert.ToDateTime(binaryReader.ReadString());
-                        TravelPrice = binaryReader.ReadDouble();
-                        trains.Add(new ScheduleTrain(DestinationStation, NumberTrain, DepartureTime,
-                            ArrivalTime, TravelPrice));
-                        TrainDataView.Rows.Add(DestinationStation,
-                            NumberTrain,
-                            DepartureTime,
-                            ArrivalTime,
-                            TravelPrice);
-                            i++;
-                    }
+                
+                trains = ScheduleTrainFileLoader.loadFromFile(openFileDialog.FileName);
+
+                TrainDataView.Rows.Clear();
+
+                foreach(ScheduleTrain train in trains) {
+                    TrainDataView.Rows.Add(
+                        train.getDestinationStation(),
+                        train.getNumberTrain(),
+                        train.getDepartureTime(),
+                        train.getArrivalTime(),
+                        train.getTravelPrice());
                 }
             }
         }
@@ -296,20 +209,7 @@ namespace CourseWorkCsharp
                     return;
                 }
                 string filename = openFileDialog.FileName;
-                using (System.IO.BinaryWriter binaryWriter = new System.IO.BinaryWriter(
-                new System.IO.FileStream(filename, System.IO.FileMode.Open)))
-                {
-
-
-                    for (int i = 0; i < trains.Count; i++)
-                    {
-                        binaryWriter.Write(trains[i].getDestinationStation());
-                        binaryWriter.Write(trains[i].getNumberTrain());
-                        binaryWriter.Write(trains[i].getDepartureTime().ToString());
-                        binaryWriter.Write(trains[i].getArrivalTime().ToString());
-                        binaryWriter.Write(trains[i].getTravelPrice());
-                    }
-                }
+                ScheduleTrainFileLoader.saveToFile(filename, trains);
             }
         }
 
@@ -495,7 +395,6 @@ namespace CourseWorkCsharp
             if (PasswordIsCorrect(passwordBox))//password 12345
             {
                 form2.Close(); 
-                
             }
         }
 

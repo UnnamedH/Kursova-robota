@@ -9,8 +9,6 @@ namespace CourseWorkCsharp
     public partial class Form1 : Form
     {
         public List<ScheduleTrain> trains = new List<ScheduleTrain>();
-        string[] countries = { "Destination station", "Number train", "Departure time",
-                "Arrival time", "Travel price" };
         public TextBox passwordBox = new TextBox();
         public Form form2 = new Form();
         bool validate(TextBox textBox)
@@ -213,56 +211,33 @@ namespace CourseWorkCsharp
             }
         }
 
-        void initListBox()
-        {
-            ListBoxKeyWord.Items.AddRange(countries);
+        void initComboBoxFilterColumns()
+        { 
+            comboBoxFilterColumns.Items.Add("Destination station");
+            comboBoxFilterColumns.Items.Add("Number train");
+            comboBoxFilterColumns.Items.Add("Departure time");
+            comboBoxFilterColumns.Items.Add("Arrival time");
+            comboBoxFilterColumns.Items.Add("Travel price");
         }
 
-        void searchByValue(int cellNumber)
+        void searchByValue(int cellNumber, String value)
         {
-
             for (int i = 0; i < TrainDataView.RowCount - 1; i++)
             {
-                if (TrainDataView.Rows[i].Cells[cellNumber].Value.ToString() == FieldInputValue.Text)
-                {
-                    TrainDataView.Rows[i].Visible = true;
-                }
+                TrainDataView.Rows[i].Visible = TrainDataView.Rows[i].Cells[cellNumber].Value.ToString() == value;
             }
         }
 
         void searchByKeyField()
         {
-
-            for (int i = 0; i < TrainDataView.RowCount - 1; i++)
+            if (comboBoxFilterColumns.SelectedIndex == -1)
             {
-                TrainDataView.Rows[i].Visible = false;
+                return;
             }
+
             for (int i = 0; i < TrainDataView.RowCount - 1; i++)
             {
-                switch (ListBoxKeyWord.SelectedIndex)
-                {
-                    case 0:
-                        searchByValue(0);
-                        break;
-
-                    case 1:
-                        searchByValue(1);
-                        break;
-
-                    case 2:
-                        searchByValue(2);
-                        break;
-
-                    case 3:
-                        searchByValue(3);
-                        break;
-
-                    case 4:
-                        searchByValue(4);
-                        break;
-                    default:
-                        break;
-                }
+                searchByValue(comboBoxFilterColumns.SelectedIndex, FieldInputValue.Text);
             }
         }
 
@@ -340,7 +315,7 @@ namespace CourseWorkCsharp
         public Form1()
         {
             InitializeComponent();
-            initListBox();
+            initComboBoxFilterColumns();
             initArrayTrains();
             fillTableOfData();
         }

@@ -151,7 +151,6 @@
             this.TrainDataView.Size = new System.Drawing.Size(895, 306);
             this.TrainDataView.TabIndex = 13;
             this.TrainDataView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TrainDataView_DoubleClick);
-            this.TrainDataView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.TrainDataView_CellAndEdit);
             // 
             // FieldNumberTrain
             // 

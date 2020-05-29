@@ -8,7 +8,6 @@ namespace CourseWorkCsharp
  
     public partial class Form1 : Form
     {
-        public List<ScheduleTrain> trains = new List<ScheduleTrain>();
         public TextBox passwordBox = new TextBox();
         public Form form2 = new Form();
         bool validate(TextBox textBox)
@@ -78,58 +77,21 @@ namespace CourseWorkCsharp
             double travelPrice = Double.Parse(FieldTravelPrice.Text);
             ScheduleTrain train = new ScheduleTrain(FieldDestinationStation.Text,
             FieldNumberTrain.Text, TimeBefore, TimeAfter, travelPrice);
-            trains.Add(train);
-            //int count = TrainDataView.Rows.Count;
             TrainDataView.Rows.Add(FieldDestinationStation.Text, FieldNumberTrain.Text,
                 TimeBefore, TimeAfter, travelPrice);
         }
 
-        void deleteRow()
-        {
-            int rowIndex = TrainDataView.CurrentCell.RowIndex;
-            int columnIndex = TrainDataView.CurrentCell.ColumnIndex;
-            if (TrainDataView.CurrentCell.Selected)
-            {
-                TrainDataView.CurrentCell.Value = "";
-                switch (columnIndex)
-                {
-                    case 0:
-                        trains[rowIndex].setDestinationStation("");
-                        break;
-
-                    case 1:
-                        trains[rowIndex].setNumberTrain("");
-                        break;
-
-                    case 2:
-                        trains[rowIndex].setDepartureTime(DateTime.MinValue);
-                        break;
-
-                    case 3:
-                        trains[rowIndex].setArrivalTime(DateTime.MinValue);
-                        break;
-
-                    case 4:
-                        trains[rowIndex].setTravelPrice(0.0);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        void deleteCurrentCell()
+        void deleteCurrentRow()
         {
             if (TrainDataView.Rows.Count > 0 && TrainDataView.CurrentRow.Selected)
             {
-                int index = TrainDataView.CurrentRow.Index;
                 TrainDataView.Rows.Remove(TrainDataView.CurrentRow);
-                trains.RemoveAt(index);
             }
         }
 
-        void initArrayTrains()
+        List<ScheduleTrain> initArrayTrains()
         {
+            List<ScheduleTrain> trains = new List<ScheduleTrain>();
             trains.Add(new ScheduleTrain("Княжево", "2341d", new DateTime(2020, 05, 28, 18, 00, 00),
                 new DateTime(2020, 05, 28, 19, 25, 00), 15.5));
             trains.Add(new ScheduleTrain("Заболотное", "1231d", new DateTime(2020, 05, 28, 14, 00, 00),
@@ -158,16 +120,42 @@ namespace CourseWorkCsharp
                 new DateTime(2020, 05, 28, 15, 00, 00), 35.0));
             trains.Add(new ScheduleTrain("Одесса", "2345d", new DateTime(2020, 05, 28, 14, 00, 00),
                 new DateTime(2020, 05, 28, 17, 30, 00), 35.0));
+
+            return trains;
         }
 
         void fillTableOfData()
         {
-            for (int i = 0; i < trains.Count; i++)
+            putTrainsToTable(initArrayTrains());
+        }
+
+        void putTrainsToTable(List<ScheduleTrain> trains)
+        {
+            foreach (ScheduleTrain train in trains)
             {
-                TrainDataView.Rows.Add(trains[i].getDestinationStation(), trains[i].getNumberTrain(),
-                    trains[i].getDepartureTime(), trains[i].getArrivalTime(), trains[i].getTravelPrice());
+                TrainDataView.Rows.Add(train.getDestinationStation(), train.getNumberTrain(),
+                    train.getDepartureTime(), train.getArrivalTime(), train.getTravelPrice());
             }
         }
+
+        List<ScheduleTrain> getTrainsFromTable()
+        {
+            List<ScheduleTrain> trains = new List<ScheduleTrain>();
+            foreach(DataGridViewRow row in TrainDataView.Rows)
+            {
+                ScheduleTrain train = new ScheduleTrain();
+                train.setDestinationStation(row.Cells[0].Value.ToString());
+                train.setNumberTrain(row.Cells[1].Value.ToString());
+                train.setDepartureTime(Convert.ToDateTime(row.Cells[2].Value.ToString()));
+                train.setArrivalTime(Convert.ToDateTime(row.Cells[3].Value.ToString()));
+                train.setTravelPrice(Convert.ToDouble(row.Cells[4].Value.ToString()));
+
+                trains.Add(train);
+            }
+
+            return trains;
+        }
+
 
         void readDataFromFile()
         {
@@ -179,8 +167,8 @@ namespace CourseWorkCsharp
                 {
                     return;
                 }
-                
-                trains = ScheduleTrainFileLoader.loadFromFile(openFileDialog.FileName);
+
+                List<ScheduleTrain> trains = ScheduleTrainFileLoader.loadFromFile(openFileDialog.FileName);
 
                 TrainDataView.Rows.Clear();
 
@@ -201,13 +189,12 @@ namespace CourseWorkCsharp
             if (result == System.Windows.Forms.DialogResult.Yes)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.ShowDialog();
                 if (!openFileDialog.ShowDialog().Equals(DialogResult.OK))
                 {
                     return;
                 }
                 string filename = openFileDialog.FileName;
-                ScheduleTrainFileLoader.saveToFile(filename, trains);
+                ScheduleTrainFileLoader.saveToFile(filename, getTrainsFromTable());
             }
         }
 
@@ -222,7 +209,7 @@ namespace CourseWorkCsharp
 
         void searchByValue(int cellNumber, String value)
         {
-            for (int i = 0; i < TrainDataView.RowCount - 1; i++)
+            for (int i = 0; i < TrainDataView.RowCount; i++)
             {
                 TrainDataView.Rows[i].Visible = TrainDataView.Rows[i].Cells[cellNumber].Value.ToString() == value;
             }
@@ -235,50 +222,14 @@ namespace CourseWorkCsharp
                 return;
             }
 
-            for (int i = 0; i < TrainDataView.RowCount - 1; i++)
-            {
-                searchByValue(comboBoxFilterColumns.SelectedIndex, FieldInputValue.Text);
-            }
+            searchByValue(comboBoxFilterColumns.SelectedIndex, FieldInputValue.Text);
         }
 
         void showCurrentDataBase()
         {
-            for (int i = 0; i < TrainDataView.RowCount - 1; i++)
+            for (int i = 0; i < TrainDataView.RowCount; i++)
             {
                 TrainDataView.Rows[i].Visible = true;
-            }
-        }
-
-        void setCurrentCellValue()
-        {
-            int columnIndex = TrainDataView.CurrentCell.ColumnIndex;
-            int rowIndex = TrainDataView.CurrentCell.RowIndex;
-            switch (columnIndex)
-            {
-                case 0:
-                    trains[rowIndex].setDestinationStation(TrainDataView.CurrentCell.Value.ToString());
-                    break;
-
-                case 1:
-                    trains[rowIndex].setNumberTrain(TrainDataView.CurrentCell.Value.ToString());
-                    break;
-
-                case 2:
-                    trains[rowIndex].setDepartureTime(Convert.ToDateTime
-                    (TrainDataView.CurrentCell.Value.ToString()));
-                    break;
-
-                case 3:
-                    trains[rowIndex].setArrivalTime(Convert.ToDateTime
-                    (TrainDataView.CurrentCell.Value.ToString()));
-                    break;
-
-                case 4:
-                    trains[rowIndex].setTravelPrice(Double.Parse
-                    (TrainDataView.CurrentCell.Value.ToString()));
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -316,7 +267,6 @@ namespace CourseWorkCsharp
         {
             InitializeComponent();
             initComboBoxFilterColumns();
-            initArrayTrains();
             fillTableOfData();
         }
 
@@ -330,8 +280,7 @@ namespace CourseWorkCsharp
 
         private void ButtonDeleteRow_Click(object sender, EventArgs e)
         {
-            deleteRow();
-            deleteCurrentCell();
+            deleteCurrentRow();
         }
 
         private void ButtonLoadData_Click(object sender, EventArgs e)
@@ -352,11 +301,6 @@ namespace CourseWorkCsharp
         private void ButtonShowCurrentDataBase_Click(object sender, EventArgs e)
         {
             showCurrentDataBase();
-        }
-
-        private void TrainDataView_CellAndEdit(object sender, DataGridViewCellEventArgs e)
-        {    
-            setCurrentCellValue();
         }
 
         private void TrainDataView_DoubleClick(object sender, DataGridViewCellEventArgs e)

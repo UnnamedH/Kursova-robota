@@ -41,10 +41,7 @@ namespace CourseWorkCsharp
 
         public void setNumberTrain(String NumberTrain)
         {
-            if (NumberTrain.Length <= 5)
-            {
                 this.NumberTrain = NumberTrain;
-            }
         }
 
         public string getNumberTrain()

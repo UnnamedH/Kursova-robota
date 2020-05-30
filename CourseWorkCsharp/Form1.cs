@@ -62,23 +62,35 @@ namespace CourseWorkCsharp
         bool validateAllFields()
         {
             bool value = false;
-            if (validateFieldDestinationStation(FieldDestinationStation) && validateFieldTravelPrice(FieldTravelPrice)
+            /*if (validateFieldDestinationStation(FieldDestinationStation) && validateFieldTravelPrice(FieldTravelPrice)
             && validateTime(FieldDepartureTime, FieldArrivalTime))
             {
                 value = true;
-            }
+            }*/
             return value;
         }
 
         void addNewRow()
         {
-            DateTime TimeBefore = Convert.ToDateTime(FieldDepartureTime.Text);
-            DateTime TimeAfter = Convert.ToDateTime(FieldArrivalTime.Text);
-            double travelPrice = Double.Parse(FieldTravelPrice.Text);
-            ScheduleTrain train = new ScheduleTrain(FieldDestinationStation.Text,
-            FieldNumberTrain.Text, TimeBefore, TimeAfter, travelPrice);
-            TrainDataView.Rows.Add(FieldDestinationStation.Text, FieldNumberTrain.Text,
-                TimeBefore, TimeAfter, travelPrice);
+            ScheduleTrain train = openEditForm(null);
+            if (train != null)
+            {
+                DataGridViewRow row = new DataGridViewRow();
+                setRowData(row, train);
+                TrainDataView.Rows.Add(row);
+            }
+        }
+
+        void editCurrentRow()
+        {
+            if (TrainDataView.CurrentRow != null)
+            {
+                ScheduleTrain train = openEditForm(getRowData(TrainDataView.CurrentRow));
+                if (train != null)
+                {
+                    setRowData(TrainDataView.CurrentRow, train);
+                }
+            }
         }
 
         void deleteCurrentRow()
@@ -133,9 +145,24 @@ namespace CourseWorkCsharp
         {
             foreach (ScheduleTrain train in trains)
             {
-                TrainDataView.Rows.Add(train.getDestinationStation(), train.getNumberTrain(),
-                    train.getDepartureTime(), train.getArrivalTime(), train.getTravelPrice());
+                DataGridViewRow row = new DataGridViewRow();
+                setRowData(row, train);
+                TrainDataView.Rows.Add(row);
+             }
+        }
+
+        private void setRowData(DataGridViewRow row, ScheduleTrain train)
+        {
+            if (row.Cells.Count == 0)
+            {
+                row.CreateCells(TrainDataView);
             }
+
+            row.Cells[0].Value = train.getDestinationStation();
+            row.Cells[1].Value = train.getNumberTrain();
+            row.Cells[2].Value = train.getDepartureTime();
+            row.Cells[3].Value = train.getArrivalTime();
+            row.Cells[4].Value = train.getTravelPrice();
         }
 
         List<ScheduleTrain> getTrainsFromTable()
@@ -143,19 +170,22 @@ namespace CourseWorkCsharp
             List<ScheduleTrain> trains = new List<ScheduleTrain>();
             foreach(DataGridViewRow row in TrainDataView.Rows)
             {
-                ScheduleTrain train = new ScheduleTrain();
-                train.setDestinationStation(row.Cells[0].Value.ToString());
-                train.setNumberTrain(row.Cells[1].Value.ToString());
-                train.setDepartureTime(Convert.ToDateTime(row.Cells[2].Value.ToString()));
-                train.setArrivalTime(Convert.ToDateTime(row.Cells[3].Value.ToString()));
-                train.setTravelPrice(Convert.ToDouble(row.Cells[4].Value.ToString()));
-
-                trains.Add(train);
+                trains.Add(getRowData(row));
             }
 
             return trains;
         }
 
+        private ScheduleTrain getRowData(DataGridViewRow row)
+        {
+            ScheduleTrain train = new ScheduleTrain();
+            train.setDestinationStation(row.Cells[0].Value.ToString());
+            train.setNumberTrain(row.Cells[1].Value.ToString());
+            train.setDepartureTime(Convert.ToDateTime(row.Cells[2].Value.ToString()));
+            train.setArrivalTime(Convert.ToDateTime(row.Cells[3].Value.ToString()));
+            train.setTravelPrice(Convert.ToDouble(row.Cells[4].Value.ToString()));
+            return train;
+        }
 
         void readDataFromFile()
         {
@@ -270,14 +300,45 @@ namespace CourseWorkCsharp
             fillTableOfData();
         }
 
-        private void ButtonAddRow_Click(object sender, EventArgs e)
+        ScheduleTrain openEditForm(ScheduleTrain train)
         {
-            if (validateAllFields())
+            EditForm editDialog = new EditForm();
+
+            if (train != null)
             {
-                addNewRow();
+                ((TextBox) editDialog.Controls["FieldDestinationStation"]).Text = train.getDestinationStation();
+                ((TextBox) editDialog.Controls["FieldNumberTrain"]).Text = train.getNumberTrain();
+                ((MaskedTextBox) editDialog.Controls["FieldDepartureTime"]).Text = train.getDepartureTime().ToString();
+                ((MaskedTextBox) editDialog.Controls["FieldArrivalTime"]).Text = train.getArrivalTime().ToString();
+                ((TextBox) editDialog.Controls["FieldTravelPrice"]).Text = train.getTravelPrice().ToString();
             }
+
+            if (editDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                ScheduleTrain result = new ScheduleTrain();
+
+                result.setDestinationStation(((TextBox) editDialog.Controls["FieldDestinationStation"]).Text);
+                result.setNumberTrain(((TextBox) editDialog.Controls["FieldNumberTrain"]).Text);
+                result.setDepartureTime(Convert.ToDateTime(((MaskedTextBox) editDialog.Controls["FieldDepartureTime"]).Text));
+                result.setArrivalTime(Convert.ToDateTime(((MaskedTextBox) editDialog.Controls["FieldArrivalTime"]).Text));
+                result.setTravelPrice(Convert.ToDouble(((TextBox)editDialog.Controls["FieldTravelPrice"]).Text));
+
+                return result;
+            }
+
+            return null;
         }
 
+        private void ButtonAddRow_Click(object sender, EventArgs e)
+        {
+            addNewRow();
+        }
+
+        private void ButtonEditRow_Click(object sender, EventArgs e)
+        {
+            CreatePasswordWindow();
+            editCurrentRow();
+        }
         private void ButtonDeleteRow_Click(object sender, EventArgs e)
         {
             deleteCurrentRow();
@@ -303,11 +364,6 @@ namespace CourseWorkCsharp
             showCurrentDataBase();
         }
 
-        private void TrainDataView_DoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            CreatePasswordWindow();
-        }
-
         void MyButtonHandler(object sender, EventArgs e)
         {
  
@@ -317,6 +373,5 @@ namespace CourseWorkCsharp
             }
         }
 
-     
     }
 }

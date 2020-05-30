@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.FieldTravelPrice = new System.Windows.Forms.TextBox();
             this.FieldArrivalTime = new System.Windows.Forms.MaskedTextBox();
             this.FieldDepartureTime = new System.Windows.Forms.MaskedTextBox();
@@ -39,7 +40,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.FieldDestinationStation = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.ButtonOK = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // FieldTravelPrice
@@ -128,6 +131,7 @@
             // 
             // button2
             // 
+            this.button2.CausesValidation = false;
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.Location = new System.Drawing.Point(192, 205);
             this.button2.Name = "button2";
@@ -136,25 +140,24 @@
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // ButtonOK
             // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(66, 205);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 23);
-            this.button1.TabIndex = 29;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.ButtonOK.Location = new System.Drawing.Point(66, 205);
+            this.ButtonOK.Name = "ButtonOK";
+            this.ButtonOK.Size = new System.Drawing.Size(100, 23);
+            this.ButtonOK.TabIndex = 29;
+            this.ButtonOK.Text = "OK";
+            this.ButtonOK.UseVisualStyleBackColor = true;
+            this.ButtonOK.Click += new System.EventHandler(this.button1_Click);
             // 
             // EditForm
             // 
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.ButtonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button2;
-            this.ClientSize = new System.Drawing.Size(372, 243);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(426, 243);
+            this.Controls.Add(this.ButtonOK);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.FieldTravelPrice);
             this.Controls.Add(this.FieldArrivalTime);
@@ -171,6 +174,7 @@
             this.Name = "EditForm";
             this.ShowInTaskbar = false;
             this.Text = "Добавить/Изменить";
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,6 +193,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox FieldDestinationStation;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button ButtonOK;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ButtonAddRow = new System.Windows.Forms.Button();
             this.ButtonDeleteRow = new System.Windows.Forms.Button();
             this.TrainDataView = new System.Windows.Forms.DataGridView();
@@ -92,8 +92,8 @@
             // 
             // DestinationStation
             // 
-            dataGridViewCellStyle3.NullValue = null;
-            this.DestinationStation.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.NullValue = null;
+            this.DestinationStation.DefaultCellStyle = dataGridViewCellStyle1;
             this.DestinationStation.HeaderText = "DestinationStation";
             this.DestinationStation.MinimumWidth = 6;
             this.DestinationStation.Name = "DestinationStation";
@@ -105,13 +105,14 @@
             this.NumberTrain.HeaderText = "NumberTrain";
             this.NumberTrain.MinimumWidth = 6;
             this.NumberTrain.Name = "NumberTrain";
+            this.NumberTrain.ReadOnly = true;
             this.NumberTrain.Width = 125;
             // 
             // DepartureTime
             // 
-            dataGridViewCellStyle4.Format = "g";
-            dataGridViewCellStyle4.NullValue = null;
-            this.DepartureTime.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Format = "g";
+            dataGridViewCellStyle2.NullValue = null;
+            this.DepartureTime.DefaultCellStyle = dataGridViewCellStyle2;
             this.DepartureTime.HeaderText = "DepartureTime";
             this.DepartureTime.MinimumWidth = 6;
             this.DepartureTime.Name = "DepartureTime";
@@ -123,6 +124,7 @@
             this.ArrivalTime.HeaderText = "ArrivalTime";
             this.ArrivalTime.MinimumWidth = 6;
             this.ArrivalTime.Name = "ArrivalTime";
+            this.ArrivalTime.ReadOnly = true;
             this.ArrivalTime.Width = 150;
             // 
             // TravelPrice
@@ -130,6 +132,7 @@
             this.TravelPrice.HeaderText = "TravelPrice";
             this.TravelPrice.MinimumWidth = 6;
             this.TravelPrice.Name = "TravelPrice";
+            this.TravelPrice.ReadOnly = true;
             this.TravelPrice.Width = 150;
             // 
             // ButtonLoadData

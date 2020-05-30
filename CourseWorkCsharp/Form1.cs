@@ -10,65 +10,6 @@ namespace CourseWorkCsharp
     {
         public TextBox passwordBox = new TextBox();
         public Form form2 = new Form();
-        bool validate(TextBox textBox)
-        {
-            bool value = false;
-            if (textBox.Text.Length != 0)
-            {
-                value = true;
-            }
-            return value;
-        }
-
-        bool validateFieldDestinationStation(TextBox textBox)
-        {
-            bool value = false;
-            if (validate(textBox) && textBox.TextLength <= 15)
-            {
-                value = true;
-            }
-            return value;
-        }
-
-        bool validateFieldTravelPrice(TextBox textBox)
-        {
-            double number = 0.0;
-            bool value = false;
-            bool isDouble = Double.TryParse(textBox.Text, out number) == true;
-            if (validate(textBox) && (textBox.TextLength <= 10) &&
-            (isDouble) && (Double.Parse(textBox.Text) > 0))
-            {
-                value = true;
-            }
-            return value;
-        }
-
-        bool validateTime(MaskedTextBox departureTime, MaskedTextBox arrivalTime)
-        {
-            bool value = false;
-            DateTime dateTimeBefore = DateTime.ParseExact(departureTime.Text, "dd.MM.yyyy HH:mm",
-                System.Globalization.CultureInfo.CurrentCulture);
-            DateTime dateTimeAfter = DateTime.ParseExact(arrivalTime.Text, "dd.MM.yyyy HH:mm",
-                System.Globalization.CultureInfo.CurrentCulture);
-            TimeSpan difference = dateTimeAfter.Subtract(dateTimeBefore);
-            TimeSpan timeSpan = new TimeSpan(00, 30, 00);
-            if (difference > timeSpan)
-            {
-                value = true;
-            }
-            return value;
-        }
-
-        bool validateAllFields()
-        {
-            bool value = false;
-            /*if (validateFieldDestinationStation(FieldDestinationStation) && validateFieldTravelPrice(FieldTravelPrice)
-            && validateTime(FieldDepartureTime, FieldArrivalTime))
-            {
-                value = true;
-            }*/
-            return value;
-        }
 
         void addNewRow()
         {
@@ -95,7 +36,7 @@ namespace CourseWorkCsharp
 
         void deleteCurrentRow()
         {
-            if (TrainDataView.Rows.Count > 0 && TrainDataView.CurrentRow.Selected)
+            if (TrainDataView.CurrentRow != null)
             {
                 TrainDataView.Rows.Remove(TrainDataView.CurrentRow);
             }
@@ -306,26 +247,25 @@ namespace CourseWorkCsharp
 
             if (train != null)
             {
-                ((TextBox) editDialog.Controls["FieldDestinationStation"]).Text = train.getDestinationStation();
-                ((TextBox) editDialog.Controls["FieldNumberTrain"]).Text = train.getNumberTrain();
-                ((MaskedTextBox) editDialog.Controls["FieldDepartureTime"]).Text = train.getDepartureTime().ToString();
-                ((MaskedTextBox) editDialog.Controls["FieldArrivalTime"]).Text = train.getArrivalTime().ToString();
-                ((TextBox) editDialog.Controls["FieldTravelPrice"]).Text = train.getTravelPrice().ToString();
+                ((TextBox)editDialog.Controls["FieldDestinationStation"]).Text = train.getDestinationStation();
+                ((TextBox)editDialog.Controls["FieldNumberTrain"]).Text = train.getNumberTrain();
+                ((MaskedTextBox)editDialog.Controls["FieldDepartureTime"]).Text = train.getDepartureTime().ToString();
+                ((MaskedTextBox)editDialog.Controls["FieldArrivalTime"]).Text = train.getArrivalTime().ToString();
+                ((TextBox)editDialog.Controls["FieldTravelPrice"]).Text = train.getTravelPrice().ToString();
             }
 
             if (editDialog.ShowDialog(this) == DialogResult.OK)
             {
+
                 ScheduleTrain result = new ScheduleTrain();
-
-                result.setDestinationStation(((TextBox) editDialog.Controls["FieldDestinationStation"]).Text);
-                result.setNumberTrain(((TextBox) editDialog.Controls["FieldNumberTrain"]).Text);
-                result.setDepartureTime(Convert.ToDateTime(((MaskedTextBox) editDialog.Controls["FieldDepartureTime"]).Text));
-                result.setArrivalTime(Convert.ToDateTime(((MaskedTextBox) editDialog.Controls["FieldArrivalTime"]).Text));
+                result.setDestinationStation(((TextBox)editDialog.Controls["FieldDestinationStation"]).Text);
+                result.setNumberTrain(((TextBox)editDialog.Controls["FieldNumberTrain"]).Text);
+                result.setDepartureTime(Convert.ToDateTime(((MaskedTextBox)editDialog.Controls["FieldDepartureTime"]).Text));
+                result.setArrivalTime(Convert.ToDateTime(((MaskedTextBox)editDialog.Controls["FieldArrivalTime"]).Text));
                 result.setTravelPrice(Convert.ToDouble(((TextBox)editDialog.Controls["FieldTravelPrice"]).Text));
-
                 return result;
             }
-
+            
             return null;
         }
 
